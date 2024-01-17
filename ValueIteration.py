@@ -26,11 +26,11 @@ class gridpoint:
 width, height = int(sys.argv[1]), int(sys.argv[2])
 
 #set default start point
-start_state = [random.randint(0, width-1), random.randint(0, height-1)]
+start_state = (random.randint(0, width-1), random.randint(0, height-1))
 
 #set default end point, ensuring end point is not the same as start point
 while True:
-    end_state = [random.randint(0, width-1), random.randint(0, height-1)]
+    end_state = (random.randint(0, width-1), random.randint(0, height-1))
     if end_state != start_state:
         break
 
@@ -54,28 +54,26 @@ while n <= len(sys.argv) - 2:
 environment = []
 for y in range(height):
     for x in range(width):
-        if [x, y] == end_state:
+        if (x, y) == end_state:
             environment.append(gridpoint(x, y, 0, 100))
         else:
             environment.append(gridpoint(x, y, 0, -1))
 
 #set landmine positions
-landmines = []
-counter = 0
-while counter < k:
-    while True:
-        landmine = [random.randint(0, width-1), random.randint(0, height-1)]
-        if landmine != start_state and landmine != end_state:
-            landmines.append(landmine)
-            break
-    counter += 1
+def set_landmines(k, width, height, start_state, end_state, environment):
+    all_coordinates = [(x, y) for x in range(width) for y in range(height) 
+                        if (x, y) != start_state and (x, y) != end_state]
+    
+    #randomly select landmine positions
+    landmines = random.sample(all_coordinates, k)
 
-#set reward values to -250 at landmine points
-for point in environment:
-    for landmine in landmines:
-        if landmine == point.getCoordinates():
+    #set reward values to -250 at landmine points
+    for point in environment:
+        if point.getCoordinates() in landmines:
             point.reward = -250
-            
+    
+    return landmines
+      
 #create list to store values of previous iteration
 old_values = []
 for n in range(len(environment)):
@@ -242,5 +240,6 @@ while state != end:
 opt_pol.append((state.x, state.y))
 
 #generate gif
+landmines = set_landmines(k, width, height, start_state, end_state, environment)
 anim, fig, ax = generateAnimat(records, start_state, end_state, mines = landmines, opt_pol = opt_pol, start_val = -10, end_val = 100, mine_val = 150, just_vals = False, generate_gif = False, vmin = -10, vmax = 150)
 plt.show()
