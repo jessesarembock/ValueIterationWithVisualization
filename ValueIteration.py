@@ -8,15 +8,14 @@ import matplotlib.pyplot as plt
 from Animate import generateAnimat
 
 #create object of type point which holds values such as coordinates, value and reward
-class gridpoint:
-
-    action = None
+class GridPoint:
     
-    def __init__(self, x, y, value, reward):
+    def __init__(self, x, y, value, reward, action=None):
         self.x = x
         self.y = y
         self.value = value
         self.reward = reward
+        self.action = action
 
     #method to get coordinates of gridpoint as a list
     def getCoordinates(self):
@@ -51,13 +50,17 @@ while n <= len(sys.argv) - 2:
     n+=1
 
 #setup environment
-environment = []
-for y in range(height):
-    for x in range(width):
-        if (x, y) == end_state:
-            environment.append(gridpoint(x, y, 0, 100))
-        else:
-            environment.append(gridpoint(x, y, 0, -1))
+def setup_environment(width, height, start_state, end_state):
+    environment = []
+    for y in range(height):
+        for x in range(width):
+            if (x, y) == end_state:
+                environment.append(GridPoint(x, y, 0, 100))
+            else:
+                environment.append(GridPoint(x, y, 0, -1))
+    return environment
+    
+environment = setup_environment(width, height, start_state, end_state)
 
 #set landmine positions
 def set_landmines(k, width, height, start_state, end_state, environment):
