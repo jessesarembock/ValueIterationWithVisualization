@@ -1,1 +1,10 @@
-.DS_Store
+# Ignore all files
+*
+
+# But don't ignore these files...
+!.gitignore
+!ValueIteration.py
+!Animate.py
+!Makefile
+!readme.txt
+!requirements.txt
