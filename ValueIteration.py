@@ -10,13 +10,14 @@ from Animate import generateAnimat
 #create object of type point which holds values such as coordinates, value and reward
 class gridpoint:
 
-    action = None
+    #action = None
 
-    def __init__(self, x, y, value, reward):
+    def __init__(self, x, y, value, reward, action = None):
         self.x = x
         self.y = y
         self.value = value
         self.reward = reward
+        self.action = action
 
     #method to get coordinates of gridpoint as a list
     def getCoordinates(self):
