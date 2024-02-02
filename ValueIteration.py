@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from Animate import generateAnimat
 
 #create object of type point which holds values such as coordinates, value and reward
-class gridpoint:
+class GridPoint:
 
     #action = None
 
@@ -41,14 +41,19 @@ g = 0.8 #set default value of gamma
 #parse command-line arguments
 n = 3
 while n <= len(sys.argv) - 2:
+    
     if sys.argv[n] == "-start":
         start_state[0], start_state[1] = int(sys.argv[n+1]), int(sys.argv[n+2])
+
     elif sys.argv[n] == "-end":
         end_state[0], end_state[1] = int(sys.argv[n+1]), int(sys.argv[n+2])
+
     elif sys.argv[n] == "-k":
         k = int(sys.argv[n+1])
+
     elif sys.argv[n] == "-gamma":
         g = sys.argv[n+1]
+
     n+=1
 
 #setup environment
@@ -56,9 +61,9 @@ environment = []
 for y in range(height):
     for x in range(width):
         if [x, y] == end_state:
-            environment.append(gridpoint(x, y, 0, 100))
+            environment.append(GridPoint(x, y, 0, 100))
         else:
-            environment.append(gridpoint(x, y, 0, -1))
+            environment.append(GridPoint(x, y, 0, -1))
 
 #set landmine positions
 landmines = []
@@ -66,7 +71,7 @@ counter = 0
 while counter < k:
     while True:
         landmine = [random.randint(0, width-1), random.randint(0, height-1)]
-        if landmine != start_state and landmine != end_state:
+        if landmine != start_state and landmine != end_state and landmine not in landmines:
             landmines.append(landmine)
             break
     counter += 1
