@@ -107,20 +107,28 @@ while True:
 
         if x == 0 and y == 0:
             environment[point].value = max(r + g*old_values[up], r + g*old_values[right])
+
         elif x == 0 and y == height-1:
             environment[point].value = max(r + g*old_values[right], r + g*old_values[down])
+
         elif x == width-1 and y == 0:
             environment[point].value = max(r + g*old_values[up], r + g*old_values[left])
+
         elif x == width-1 and y == height-1:
             environment[point].value = max(r + g*old_values[down], r + g*old_values[left])
+
         elif x == 0:
             environment[point].value = max(r + g*old_values[up], r + g*old_values[right], r + g*old_values[down])
+
         elif x == width-1:
             environment[point].value = max(r + g*old_values[up], r + g*old_values[down], r + g*old_values[left])
+
         elif y == 0:
             environment[point].value = max(r + g*old_values[up], r + g*old_values[right], r + g*old_values[left])
+
         elif y == height-1:
             environment[point].value = max(r + g*old_values[right], r + g*old_values[down], r + g*old_values[left])
+
         else:
            environment[point].value = max(r + g*old_values[up], r + g*old_values[right], r + g*old_values[down], r + g*old_values[left])
 
@@ -142,87 +150,52 @@ while True:
 
     if count == len(environment): #converged
         break
-
+        
 #policy extraction
 for point in range(len(environment)):
 
     x, y = environment[point].x, environment[point].y
     up, right, down, left = width*(y+1) + x, width*y + (x+1), width*(y-1) + x, width*y + (x-1)
+    action_mapping = {up: 'U', right: 'R', down: 'D', left: 'L'}
 
     if x == 0 and y == 0:
-        act = max(old_values[up], old_values[right])
-        if act == old_values[up]:
-            environment[point].action = 'U'
-        else:
-            environment[point].action = 'R'
+        # Find the action index with the maximum value
+        max_action_index = max([up, right], key=lambda idx: old_values[idx])
+        
+        # Set the action for the current point based on the mapping
+        environment[point].action = action_mapping[max_action_index]
 
     elif x == 0 and y == height-1:
-        act = max(old_values[right], old_values[down])
-        if act == old_values[right]:
-            environment[point].action = 'R'
-        else:
-            environment[point].action = 'D'
+        max_action_index = max([right, down], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
     elif x == width-1 and y == 0:
-        act = max(old_values[up], old_values[left])
-        if act == old_values[up]:
-            environment[point].action = 'U'
-        else:
-            environment[point].action = 'L'
+        max_action_index = max([up, left], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
     elif x == width-1 and y == height-1:
-        act = max(old_values[down], old_values[left])
-        if act == old_values[down]:
-            environment[point].action = 'D'
-        else:
-            environment[point].action = 'L'
+        max_action_index = max([down, left], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
     elif x == 0:
-        act = max(old_values[up], old_values[right], old_values[down])
-        if act == old_values[up]:
-            environment[point].action = 'U'
-        elif act == old_values[right]:
-            environment[point].action = 'R'
-        else:
-            environment[point].action = 'D'
+        max_action_index = max([up, right, down], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
     elif x == width-1:
-        act = max(old_values[up], old_values[down], old_values[left])
-        if act == old_values[up]:
-            environment[point].action = 'U'
-        elif act == old_values[down]:
-            environment[point].action = 'D'
-        else:
-            environment[point].action = 'L'
+        max_action_index = max([up, down, left], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
     elif y == 0:
-        act = max(old_values[up], old_values[right], old_values[left])
-        if act == old_values[up]:
-            environment[point].action = 'U'
-        elif act == old_values[right]:
-            environment[point].action = 'R'
-        else:
-            environment[point].action = 'L'
+        max_action_index = max([up, right, left], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
     elif y == height-1:
-        act = max(old_values[right], old_values[down], old_values[left])
-        if act == old_values[right]:
-            environment[point].action = 'R'
-        elif act == old_values[down]:
-            environment[point].action = 'D'
-        else:
-            environment[point].action = 'L'
+        max_action_index = max([right, down, left], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
     else:
-        act = max(old_values[up], old_values[right], old_values[down], old_values[left])
-        if act == old_values[up]:
-            environment[point].action = 'U'
-        elif act == old_values[right]:
-            environment[point].action = 'R'
-        elif act == old_values[down]:
-            environment[point].action = 'D'
-        else:
-            environment[point].action = 'L'
+        max_action_index = max([up, right, down, left], key=lambda idx: old_values[idx])
+        environment[point].action = action_mapping[max_action_index]
 
 #initialize optimal policy list            
 opt_pol = []
