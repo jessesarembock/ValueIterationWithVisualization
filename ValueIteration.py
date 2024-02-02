@@ -8,14 +8,15 @@ import matplotlib.pyplot as plt
 from Animate import generateAnimat
 
 #create object of type point which holds values such as coordinates, value and reward
-class GridPoint:
-    
-    def __init__(self, x, y, value, reward, action=None):
+class gridpoint:
+
+    action = None
+
+    def __init__(self, x, y, value, reward):
         self.x = x
         self.y = y
         self.value = value
         self.reward = reward
-        self.action = action
 
     #method to get coordinates of gridpoint as a list
     def getCoordinates(self):
@@ -25,11 +26,11 @@ class GridPoint:
 width, height = int(sys.argv[1]), int(sys.argv[2])
 
 #set default start point
-start_state = (random.randint(0, width-1), random.randint(0, height-1))
+start_state = [random.randint(0, width-1), random.randint(0, height-1)]
 
 #set default end point, ensuring end point is not the same as start point
 while True:
-    end_state = (random.randint(0, width-1), random.randint(0, height-1))
+    end_state = [random.randint(0, width-1), random.randint(0, height-1)]
     if end_state != start_state:
         break
 
@@ -50,38 +51,36 @@ while n <= len(sys.argv) - 2:
     n+=1
 
 #setup environment
-def setup_environment(width, height, start_state, end_state):
-    environment = []
-    for y in range(height):
-        for x in range(width):
-            if (x, y) == end_state:
-                environment.append(GridPoint(x, y, 0, 100))
-            else:
-                environment.append(GridPoint(x, y, 0, -1))
-    return environment
-    
-environment = setup_environment(width, height, start_state, end_state)
+environment = []
+for y in range(height):
+    for x in range(width):
+        if [x, y] == end_state:
+            environment.append(gridpoint(x, y, 0, 100))
+        else:
+            environment.append(gridpoint(x, y, 0, -1))
 
 #set landmine positions
-def set_landmines(k, width, height, start_state, end_state, environment):
-    all_coordinates = [(x, y) for x in range(width) for y in range(height) 
-                        if (x, y) != start_state and (x, y) != end_state]
-    
-    #randomly select landmine positions
-    landmines = random.sample(all_coordinates, k)
+landmines = []
+counter = 0
+while counter < k:
+    while True:
+        landmine = [random.randint(0, width-1), random.randint(0, height-1)]
+        if landmine != start_state and landmine != end_state:
+            landmines.append(landmine)
+            break
+    counter += 1
 
-    #set reward values to -250 at landmine points
-    for point in environment:
-        if point.getCoordinates() in landmines:
+#set reward values to -250 at landmine points
+for point in environment:
+    for landmine in landmines:
+        if landmine == point.getCoordinates():
             point.reward = -250
-    
-    return landmines
-      
+
 #create list to store values of previous iteration
 old_values = []
 for n in range(len(environment)):
     old_values.append(0)
-    
+
 #set theta value for convergence
 theta = 0.01
 
@@ -92,13 +91,13 @@ records = []
 while True:
 
     record = []
-        
+
     for point in range(len(environment)):
 
         x, y = environment[point].x, environment[point].y
         r = environment[point].reward
         up, right, down, left = width*(y+1) + x, width*y + (x+1), width*(y-1) + x, width*y + (x-1)
-        
+
 
         if x == 0 and y == 0:
             environment[point].value = max(r + g*old_values[up], r + g*old_values[right])
@@ -134,7 +133,7 @@ while True:
             record2D[i][j] = record[element]
             element += 1
     records.append(record2D)
-            
+
     if count == len(environment): #converged
         break
 
@@ -243,6 +242,5 @@ while state != end:
 opt_pol.append((state.x, state.y))
 
 #generate gif
-landmines = set_landmines(k, width, height, start_state, end_state, environment)
 anim, fig, ax = generateAnimat(records, start_state, end_state, mines = landmines, opt_pol = opt_pol, start_val = -10, end_val = 100, mine_val = 150, just_vals = False, generate_gif = False, vmin = -10, vmax = 150)
 plt.show()
