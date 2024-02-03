@@ -7,6 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Animate import generateAnimat
 
+if len(sys.argv) < 3:
+    print("Error: must enter width and height values. Usage: python ValueIteration.py <width> <height> [-start <x> <y>] [-end <x> <y>] [-k <number of landmines>] [-gamma <value of gamma>]")
+    sys.exit(1)
+
 #create object of type point which holds values such as coordinates, value and reward
 class GridPoint:
 
@@ -44,9 +48,15 @@ while n <= len(sys.argv) - 2:
     
     if sys.argv[n] == "-start":
         start_state[0], start_state[1] = int(sys.argv[n+1]), int(sys.argv[n+2])
+        if not 0 <= start_state[0] < width or not 0 <= start_state[1] < height:
+            print("Error: start state must be within the grid")
+            sys.exit(1)
 
     elif sys.argv[n] == "-end":
         end_state[0], end_state[1] = int(sys.argv[n+1]), int(sys.argv[n+2])
+        if not 0 <= end_state[0] < width or not 0 <= end_state[1] < height:
+            print("Error: end state must be within the grid")
+            sys.exit(1)
 
     elif sys.argv[n] == "-k":
         k = int(sys.argv[n+1])
@@ -104,7 +114,6 @@ while True:
         r = environment[point].reward
         up, right, down, left = width*(y+1) + x, width*y + (x+1), width*(y-1) + x, width*y + (x-1)
 
-
         if x == 0 and y == 0:
             environment[point].value = max(r + g*old_values[up], r + g*old_values[right])
 
@@ -132,9 +141,10 @@ while True:
         else:
            environment[point].value = max(r + g*old_values[up], r + g*old_values[right], r + g*old_values[down], r + g*old_values[left])
 
+    #check for convergence
     count = 0
     for j in range(len(environment)):
-        if abs(environment[j].value - old_values[j]) < theta: #check that change in value less than theta
+        if abs(environment[j].value - old_values[j]) < theta:
             count += 1
         old_values[j] = environment[j].value
         record.append(old_values[j])
@@ -161,7 +171,7 @@ for point in range(len(environment)):
     if x == 0 and y == 0:
         # Find the action index with the maximum value
         max_action_index = max([up, right], key=lambda idx: old_values[idx])
-        
+
         # Set the action for the current point based on the mapping
         environment[point].action = action_mapping[max_action_index]
 
@@ -209,15 +219,21 @@ for e in environment:
 
 #add states to optimal policy list
 while state != end:
+
     opt_pol.append((state.x, state.y))
+
     if state.action == 'U':
         state = environment[width*(state.y+1) + state.x]
+
     elif state.action == 'R':
         state = environment[width*state.y + (state.x+1)]
+
     elif state.action == 'D':
         state = environment[width*(state.y-1) + state.x]
+
     else:
         state = environment[width*state.y + (state.x-1)]
+
 opt_pol.append((state.x, state.y))
 
 #generate gif
