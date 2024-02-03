@@ -16,4 +16,4 @@ export height ?= 10
 export k ?= -k 3
 export gamma ?= -g 0.8
 export start ?= -start 0 0
-export end ?= -end 9 9
+export end ?= -end $$(($(width) - 1)) $$(($(height) - 1))

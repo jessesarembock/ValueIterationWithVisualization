@@ -8,13 +8,12 @@ import matplotlib.pyplot as plt
 from Animate import generateAnimat
 
 if len(sys.argv) < 3:
-    print("Error: must enter width and height values. Usage: python ValueIteration.py <width> <height> [-start <x> <y>] [-end <x> <y>] [-k <number of landmines>] [-gamma <value of gamma>]")
+    print("Error: must enter width and height values. Usage: python ValueIteration.py "
+          "<width> <height> [-start <x> <y>] [-end <x> <y>] [-k <number of landmines>] [-gamma <value of gamma>]")
     sys.exit(1)
 
 #create object of type point which holds values such as coordinates, value and reward
 class GridPoint:
-
-    #action = None
 
     def __init__(self, x, y, value, reward, action = None):
         self.x = x
@@ -60,6 +59,9 @@ while n <= len(sys.argv) - 2:
 
     elif sys.argv[n] == "-k":
         k = int(sys.argv[n+1])
+        if k > 0.4*width*height:
+            print("Error: number of landmines must be less than 40% of the grid size")
+            sys.exit(1)
 
     elif sys.argv[n] == "-gamma":
         g = sys.argv[n+1]
@@ -218,6 +220,9 @@ for e in environment:
         end = e
 
 #add states to optimal policy list
+max_iterations = 999999
+iterations = 0
+
 while state != end:
 
     opt_pol.append((state.x, state.y))
@@ -234,8 +239,30 @@ while state != end:
     else:
         state = environment[width*state.y + (state.x-1)]
 
+    iterations += 1
+
+    if iterations > max_iterations:
+        print("Error: maximum iterations reached. Too many landmines blocking path to end state.")
+        sys.exit(1)
+
 opt_pol.append((state.x, state.y))
 
 #generate gif
-anim, fig, ax = generateAnimat(records, start_state, end_state, mines = landmines, opt_pol = opt_pol, start_val = -10, end_val = 100, mine_val = 150, just_vals = False, generate_gif = False, vmin = -10, vmax = 150)
+anim, fig, ax = generateAnimat(
+    
+    records,
+    start_state,
+    end_state,
+    mines=landmines,
+    opt_pol=opt_pol,
+    start_val=-10,
+    end_val=100,
+    mine_val=150,
+    just_vals=False,
+    generate_gif=False,
+    vmin=-10,
+    vmax=150
+
+)
+
 plt.show()
