@@ -1,4 +1,3 @@
-
 # This file contains the generateAnimat function that generates an animation of 2D array data.
 # The function can also generate an animated gif so if you are having trouble getting things to work in your terminal,
 # you can view your results from the generated file.
