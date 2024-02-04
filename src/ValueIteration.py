@@ -70,7 +70,7 @@ while n <= len(sys.argv) - 2:
             sys.exit(1)
 
     elif sys.argv[n] == "-gamma":
-        g = sys.argv[n+1]
+        g = float(sys.argv[n+1])
 
     n+=1
 
@@ -88,6 +88,7 @@ for y in range(height):
 #set landmine positions
 landmines = []
 counter = 0
+
 while counter < k:
     while True:
         landmine = [random.randint(0, width-1), random.randint(0, height-1)]
