@@ -7,10 +7,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Animate import generateAnimat
 
+
 if len(sys.argv) < 3:
     print("Error: must enter width and height values. Usage: python ValueIteration.py "
           "<width> <height> [-start <x> <y>] [-end <x> <y>] [-k <number of landmines>] [-gamma <value of gamma>]")
     sys.exit(1)
+
 
 #create object of type point which holds values such as coordinates, value and reward
 class GridPoint:
@@ -26,11 +28,13 @@ class GridPoint:
     def getCoordinates(self):
         return [self.x, self.y]
 
+
 #get width and height command-line arguments
 width, height = int(sys.argv[1]), int(sys.argv[2])
 
 #set default start point
 start_state = [random.randint(0, width-1), random.randint(0, height-1)]
+
 
 #set default end point, ensuring end point is not the same as start point
 while True:
@@ -38,8 +42,10 @@ while True:
     if end_state != start_state:
         break
 
-k = 3 #set default number of landmines
-g = 0.8 #set default value of gamma
+#set default number of landmines and value of gamma
+k = 3
+g = 0.8
+
 
 #parse command-line arguments
 n = 3
@@ -59,7 +65,7 @@ while n <= len(sys.argv) - 2:
 
     elif sys.argv[n] == "-k":
         k = int(sys.argv[n+1])
-        if k > 0.4*width*height:
+        if k > 0.4 * width * height:
             print("Error: number of landmines must be less than 40% of the grid size")
             sys.exit(1)
 
@@ -67,6 +73,7 @@ while n <= len(sys.argv) - 2:
         g = sys.argv[n+1]
 
     n+=1
+
 
 #setup environment
 environment = []
@@ -76,6 +83,7 @@ for y in range(height):
             environment.append(GridPoint(x, y, 0, 100))
         else:
             environment.append(GridPoint(x, y, 0, -1))
+
 
 #set landmine positions
 landmines = []
@@ -88,22 +96,26 @@ while counter < k:
             break
     counter += 1
 
+
 #set reward values to -250 at landmine points
 for point in environment:
     for landmine in landmines:
         if landmine == point.getCoordinates():
             point.reward = -250
 
+
 #create list to store values of previous iteration
 old_values = []
 for n in range(len(environment)):
     old_values.append(0)
+
 
 #set theta value for convergence
 theta = 0.01
 
 #create records list
 records = []
+
 
 #value iteration using Bellman's equation
 while True:
@@ -143,6 +155,7 @@ while True:
         else:
            environment[point].value = max(r + g*old_values[up], r + g*old_values[right], r + g*old_values[down], r + g*old_values[left])
 
+
     #check for convergence
     count = 0
     for j in range(len(environment)):
@@ -150,6 +163,7 @@ while True:
             count += 1
         old_values[j] = environment[j].value
         record.append(old_values[j])
+
 
     #convert record to 2D array
     record2D = [[0 for cols in range(width)] for rows in range(height)]
@@ -163,6 +177,7 @@ while True:
     if count == len(environment): #converged
         break
         
+
 #policy extraction
 for point in range(len(environment)):
 
@@ -209,6 +224,7 @@ for point in range(len(environment)):
         max_action_index = max([up, right, down, left], key=lambda idx: old_values[idx])
         environment[point].action = action_mapping[max_action_index]
 
+
 #initialize optimal policy list            
 opt_pol = []
 
@@ -219,7 +235,9 @@ for e in environment:
     elif e.x == end_state[0] and e.y == end_state[1]:
         end = e
 
+
 #add states to optimal policy list
+        
 max_iterations = 999999
 iterations = 0
 
@@ -246,6 +264,7 @@ while state != end:
         sys.exit(1)
 
 opt_pol.append((state.x, state.y))
+
 
 #generate gif
 anim, fig, ax = generateAnimat(
