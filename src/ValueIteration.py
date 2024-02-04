@@ -268,7 +268,6 @@ opt_pol.append((state.x, state.y))
 
 #generate gif
 anim, fig, ax = generateAnimat(
-    
     records,
     start_state,
     end_state,
@@ -281,7 +280,6 @@ anim, fig, ax = generateAnimat(
     generate_gif=False,
     vmin=-10,
     vmax=150
-
 )
 
 plt.show()

@@ -1,13 +1,8 @@
-# CSC3022F - RL Assignment 2
-# May 2021
+
 # This file contains the generateAnimat function that generates an animation of 2D array data.
 # The function can also generate an animated gif so if you are having trouble getting things to work in your terminal,
 # you can view your results from the generated file.
-# The 'col' parameters make assumptions about the size of the rewards you give your agents. You may need to change their values to generate an animation with 
-# clearly identifiable start and end states.
 # The final frame of the animation showcases the supplied optimal policy as it would be executed by the agent on the given environment.
-# The function also assumes that the last record represents the iteration/epoch where, in the case of Value Iteration, convergence was DETECTED and
-# in the case of Q-Learning, the last record is the last epoch on the learning algorithm
 
 # Don't forget to turn off interpolation when viewing these animations or else each cell will not be easily identifiable.
 
@@ -84,4 +79,3 @@ def generateAnimat(records: [[float]], start_state: (float, float), end_state: (
 		anim.save_gif(filename)
 
 	return anim, fig, ax
-	

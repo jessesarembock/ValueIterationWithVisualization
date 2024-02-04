@@ -1,10 +1,4 @@
-# Ignore all files
-*
-
-# But don't ignore these files...
-!.gitignore
-!ValueIteration.py
-!Animate.py
-!Makefile
-!readme.txt
-!requirements.txt
+.DS_Store
+venv/
+__pycache__/
+*.pyc

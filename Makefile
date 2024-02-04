@@ -14,6 +14,6 @@ run:
 export width ?= 10
 export height ?= 10
 export k ?= -k 3
-export gamma ?= -g 0.8
+export gamma ?= -gamma 0.8
 export start ?= -start 1 1
 export end ?= -end $$(($(width) - 2)) $$(($(height) - 2))
