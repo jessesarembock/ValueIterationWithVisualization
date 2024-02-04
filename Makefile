@@ -9,7 +9,7 @@ clean:
 	find __pycache__ "*.pyc" -delete
 
 run:
-	. venv/bin/activate; python3 ValueIteration.py $(width) $(height) $(k) $(gamma) $(start) $(end)
+	. venv/bin/activate; python3 src/ValueIteration.py $(width) $(height) $(k) $(gamma) $(start) $(end)
 
 export width ?= 10
 export height ?= 10
