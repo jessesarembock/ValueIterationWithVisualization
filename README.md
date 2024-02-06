@@ -27,7 +27,7 @@ This project implements Value Iteration on a grid-based environment, using a Bel
 
 > ● Python 3.x
 >
-> ● Required Python packages: 'numpy', 'matplotlib', 'animatplot'.
+> ● Required Python packages: 'matplotlib', 'animatplot'.
 
 
 **Setup** **and** **Running** **the** **Application**
